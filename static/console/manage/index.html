@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- 引入样式 -->
+    <!--<link rel="stylesheet" href="https://unpkg.com/element-ui@next/lib/theme-chalk/index.css">-->
+    <link rel="stylesheet" href="../../assets/css/element-ui.css">
+</head>
+<body>
+<div id="app">
+    <el-dialog
+            title="删除确认"
+            :visible.sync="deleteConfirmDialogVisible"
+            width="30%"
+            :before-close="handleClose">
+        <span>确认删除?</span>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="deleteConfirmDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="onDeleteConfirmDialogPrimaryBtnClick">确 定</el-button>
+          </span>
+    </el-dialog>
+
+        <el-button type="text" @click="onCreateBtnClick">创建</el-button>
+    <el-dialog :title="form.title" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+            <el-form-item label="ID" :label-width="formLabelWidth">
+                <el-input v-model="form.book.id" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="标题" :label-width="formLabelWidth">
+                <el-input v-model="form.book.title" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="价格" :label-width="formLabelWidth">
+                <el-input v-model="form.book.price" auto-complete="off"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="onFormPrimaryBtnClick">确 定</el-button>
+        </div>
+    </el-dialog>
+
+    <!-- table -->
+    <el-table
+            v-loading="loading"
+            :data="tableData"
+            stripe
+            style="width: 100%">
+        <el-table-column
+                prop="id"
+                label="ID"
+                sortable>
+        </el-table-column>
+        <el-table-column
+                prop="title"
+                label="标题"
+                sortable>
+        </el-table-column>
+        <el-table-column
+                prop="price"
+                label="价格"
+                sortable>
+        </el-table-column>
+        <el-table-column
+                fixed="right"
+                label="操作"
+                width="160">
+            <template slot-scope="scope">
+                <el-button @click="onViewRowBtnClick(scope.row)" type="text" size="small">查看</el-button>
+                <el-button @click="onUpdateRowBtnClick(scope.row)" type="text" size="small">编辑</el-button>
+                <el-button @click="onDeleteRowBtnClick(scope.row)" type="text" size="small">删除</el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+</div>
+</body>
+<!-- 先引入 Vue -->
+<!--<script src="https://unpkg.com/vue/dist/vue.js"></script>-->
+<script src="../../assets/js/vue.js"></script>
+
+<!-- 引入组件库 -->
+<!--<script src="https://unpkg.com/element-ui@next/lib/index.js"></script>-->
+<script src="../../assets/js/element-ui.js"></script>
+
+<script src="../../assets/js/axios.min.js"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: function() {
+            return {
+                toDeleteBook:{},
+                form: {
+                    title:"",
+                    mode:"",
+                    book:{}
+                },
+                formLabelWidth: '60px',
+                dialogFormVisible: false,
+                deleteConfirmDialogVisible:false,
+                visible: false,
+                loading:false,
+                tableData: []
+            }
+        },
+        created:function () {
+            this.refreshList();
+        },
+        methods:{
+            onViewRowBtnClick:function (row) {
+                this.clearForm();
+                this.form.title = "查看 Book";
+                this.form.mode = "view";
+                this.form.book = row;
+                this.dialogFormVisible = true;
+            },
+            onCreateBtnClick:function () {
+                this.clearForm();
+                this.form.title = "创建 Book";
+                this.form.mode = "create";
+                this.dialogFormVisible = true;
+            },
+            onUpdateRowBtnClick:function (row) {
+                this.clearForm();
+                this.form.title = "更新 Book";
+                this.form.mode = "update";
+                this.form.book = row;
+                this.dialogFormVisible = true;
+            },
+            onDeleteRowBtnClick:function (row) {
+                this.toDeleteBook = row;
+                this.deleteConfirmDialogVisible = true;
+            },
+            onFormPrimaryBtnClick:function () {
+                if(this.form.mode=="view"){
+                    this.dialogFormVisible = false;
+                }else if(this.form.mode=="create"){
+                    this.create();
+                }else if(this.form.mode=="update"){
+                    this.update();
+                }
+            },
+            onDeleteConfirmDialogPrimaryBtnClick:function () {
+                const id = this.toDeleteBook.id;
+                this.deleteConfirmDialogVisible = false;
+                this.deleteById(id);
+            },
+            refreshList:function () {
+                this.loading = true;
+                let self = this;
+                axios.get('/leapcloud_ext_demo/api/books')
+                    .then(function (response) {
+                        self.loading = false;
+                        self.tableData = response.data;
+                        console.log(response);
+                    })
+                    .catch(function (error) {
+                        self.loading = false;
+                        self.$message.error(''+error);
+                    });
+            },
+            reloadPage:function(){
+                window.location.reload();
+            },
+            clearForm:function () {
+                this.form = {
+                    title:"",
+                    mode:"",
+                    book:{}
+                }
+            },
+            create:function () {
+                this.loading = true;
+                let self = this;
+                axios.post('/leapcloud_ext_demo/api/books',self.form.book)
+                    .then(function (response) {
+                        self.dialogFormVisible = false;
+                        self.clearForm();
+                        self.loading = false;
+                        self.refreshList();
+                    })
+                    .catch(function (error) {
+                        self.loading = false;
+                        self.$message.error(''+error);
+                    });
+            },
+            update:function () {
+                this.loading = true;
+                let self = this;
+                const id = self.form.book.id;
+                axios.put('/leapcloud_ext_demo/api/books/'+id,self.form.book)
+                    .then(function (response) {
+                        self.dialogFormVisible = false;
+                        self.clearForm();
+                        self.loading = false;
+                        self.refreshList();
+                    })
+                    .catch(function (error) {
+                        self.loading = false;
+                        self.$message.error(''+error);
+                    });
+            },
+            deleteById:function (id) {
+                this.loading = true;
+                let self = this;
+                axios.delete('/leapcloud_ext_demo/api/books/'+id)
+                    .then(function (response) {
+                        self.loading = false;
+                        self.refreshList();
+                    })
+                    .catch(function (error) {
+                        self.loading = false;
+                        self.$message.error(''+error);
+                    });
+            }
+        }
+    })
+</script>
+</html>

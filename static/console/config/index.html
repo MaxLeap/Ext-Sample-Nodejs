@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- 引入样式 -->
+    <!--<link rel="stylesheet" href="https://unpkg.com/element-ui@next/lib/theme-chalk/index.css">-->
+    <link rel="stylesheet" href="../../assets/css/element-ui.css">
+</head>
+<body>
+<div id="app">
+    <el-form ref="form" :model="form" label-width="120px" v-loading="loading">
+        <el-form-item label="允许游客访问">
+            <el-switch v-model="form.allowGuest"></el-switch>
+        </el-form-item>
+        <el-form-item label="模式">
+            <el-radio-group v-model="form.mode">
+                <el-radio label="B2C">B2C</el-radio>
+                <el-radio label="B2B2C">B2B2C</el-radio>
+            </el-radio-group>
+        </el-form-item>
+        <el-form-item label="其他配置">
+            <el-input type="textarea" v-model="form.info"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="onSubmit">立即保存</el-button>
+        </el-form-item>
+    </el-form>
+
+</div>
+</body>
+<!-- 先引入 Vue -->
+<!--<script src="https://unpkg.com/vue/dist/vue.js"></script>-->
+<script src="../../assets/js/vue.js"></script>
+
+<!-- 引入组件库 -->
+<!--<script src="https://unpkg.com/element-ui@next/lib/index.js"></script>-->
+<script src="../../assets/js/element-ui.js"></script>
+
+<script src="../../assets/js/axios.min.js"></script>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: function() {
+            return {
+                loading:true,
+                form: {
+                    allowGuest: false,
+                    mode: 'B2C',
+                    info: ''
+                }
+            }
+        },
+        created:function () {
+            this.fetchConfig();
+        },
+        methods:{
+            fetchConfig:function () {
+                let self = this;
+                self.loading = true;
+                axios.get('/leapcloud_ext_demo/api/serverConfig')
+                    .then(function (response) {
+                        self.loading = false;
+                        self.form = response.data;
+                    })
+                    .catch(function (error) {
+                        self.loading = false;
+                        self.$message.error(''+error);
+                    });
+            },
+            onSubmit() {
+                let self = this;
+                self.loading = true;
+                axios.put('/leapcloud_ext_demo/api/serverConfig',this.form)
+                    .then(function (response) {
+                        self.loading = false;
+                        self.form = response.data;
+                    })
+                    .catch(function (error) {
+                        self.loading = false;
+                        self.$message.error(''+error);
+                    });
+            }
+        }
+    })
+</script>
+</html>
