@@ -19,7 +19,7 @@ app.use(cors({
     origin:"*"
 }));
 
-// 异常处理
+// 未知异常处理
 process.on('uncaughtException', function (err) {
     console.error('Error caught in uncaughtException event:', err.stack);
 });
@@ -28,6 +28,7 @@ process.on('unhandledRejection', function (reason, p) {
     console.log('Possibly Unhandled Rejection at: Promise ', p, ' reason: ', reason);
 });
 
+// 路由
 app.use(router.routes())
     .use(router.allowedMethods());
 

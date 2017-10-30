@@ -10,7 +10,7 @@
 <div id="app">
     <el-form ref="form" :model="form" label-width="120px" v-loading="loading">
         <el-form-item label="允许游客访问">
-            <el-switch v-model="form.allowGuest"></el-switch>
+            <el-switch v-model="form.switchDemo"></el-switch>
         </el-form-item>
         <el-form-item label="模式">
             <el-radio-group v-model="form.mode">
@@ -45,7 +45,7 @@
             return {
                 loading:true,
                 form: {
-                    allowGuest: false,
+                    switchDemo: false,
                     mode: 'B2C',
                     info: ''
                 }
