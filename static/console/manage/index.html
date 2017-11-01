@@ -12,7 +12,7 @@
             title="删除确认"
             :visible.sync="deleteConfirmDialogVisible"
             width="30%"
-            :before-close="handleClose">
+            :before-close="onDeleteRowBtnClick">
         <span>确认删除?</span>
         <span slot="footer" class="dialog-footer">
             <el-button @click="deleteConfirmDialogVisible = false">取 消</el-button>
