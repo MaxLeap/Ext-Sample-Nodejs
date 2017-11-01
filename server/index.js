@@ -33,7 +33,7 @@ app.use(router.routes())
     .use(router.allowedMethods());
 
 // 启动
-const port = 3000; // 端口
+const port = 8080; // 端口
 app.listen(port,function () {
     console.log('demo server listening at http://127.0.0.1:%s', port);
 });
