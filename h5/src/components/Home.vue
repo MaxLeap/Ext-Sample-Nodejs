@@ -52,7 +52,7 @@
       async fetchBooks() {
         let self = this;
         self.loading = true;
-        const url = `${extApiPrefix}/leapcloud_ext_demo/api/books`;
+        const url = `${extApiPrefix}/api/books`;
         return axios.get(url).then(function (response) {
           self.loading = false;
           self.books = response.data;

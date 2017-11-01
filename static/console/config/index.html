@@ -58,7 +58,7 @@
             fetchConfig:function () {
                 let self = this;
                 self.loading = true;
-                axios.get('/leapcloud_ext_demo/api/serverConfig')
+                axios.get('/ext/leapcloud_ext_demo/api/serverConfig')
                     .then(function (response) {
                         self.loading = false;
                         self.form = response.data;
@@ -71,7 +71,7 @@
             onSubmit() {
                 let self = this;
                 self.loading = true;
-                axios.put('/leapcloud_ext_demo/api/serverConfig',this.form)
+                axios.put('/ext/leapcloud_ext_demo/api/serverConfig',this.form)
                     .then(function (response) {
                         self.loading = false;
                         self.form = response.data;

@@ -119,9 +119,9 @@
        */
       setStatusText(){
         if(!this.isSessionTokenValid){
-          this.statusText = "当前未登录"
+          this.statusText = "当前未登录";
         }else{
-          this.statusText = "当前已经登录"
+          this.statusText = "当前已经登录";
         }
       },
       /**
@@ -140,7 +140,7 @@
       async fetchServerConfig() {
         let self = this;
         self.loading = true;
-        return axios.get(`${extApiPrefix}/leapcloud_ext_demo/api/serverConfig`)
+        return axios.get(`${extApiPrefix}/api/serverConfig`)
           .then(function (response) {
             self.loading = false;
             self.serverConfig = response.data;
