@@ -106,7 +106,7 @@
           const errMsg = "parseQueryString error: url 中 appId 不能为空.";
           this.loading = false;
           this.showErrorMsg(errMsg);
-          throw new Error(errMsg);
+//          throw new Error(errMsg);
           return;
         }
         this.auth.appId = maxleap_appid;
@@ -147,7 +147,7 @@
           })
           .catch(function (error) {
             self.loading = false;
-            const message = error.response.status + " " + JSON.stringify(error.response.data);
+            const message = error.response?(error.response.status + " " + JSON.stringify(error.response.data)):"Unkown Error!";
             self.showErrorMsg("fetchServerConfig error: " + message);
           });
       },
@@ -157,6 +157,10 @@
        */
       async fetchAppConfig() {
         let self = this;
+        // 没有 appId
+        if(self.auth.appId){
+          return false
+        }
         self.loading = true;
         return axios.get(appConfigUrl,{
           headers:this.leapCloudReqHeaders
@@ -167,7 +171,7 @@
           })
           .catch(function (error) {
             self.loading = false;
-            const message = error.response.status + " " + JSON.stringify(error.response.data);
+            const message = error.response?(error.response.status + " " + JSON.stringify(error.response.data)):"Unkown Error!";
             self.showErrorMsg("fetchAppConfig error: " + message);
           });
       }
