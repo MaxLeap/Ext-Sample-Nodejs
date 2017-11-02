@@ -147,7 +147,7 @@
           })
           .catch(function (error) {
             self.loading = false;
-            const message = error.response?(error.response.status + " " + JSON.stringify(error.response.data)):"Unkown Error!";
+            const message = error.response?(error.response.status + " " + JSON.stringify(error.response.data)):error.message;
             self.showErrorMsg("fetchServerConfig error: " + message);
           });
       },
@@ -171,7 +171,7 @@
           })
           .catch(function (error) {
             self.loading = false;
-            const message = error.response?(error.response.status + " " + JSON.stringify(error.response.data)):"Unkown Error!";
+            const message = error.response?(error.response.status + " " + JSON.stringify(error.response.data)):error.message;
             self.showErrorMsg("fetchAppConfig error: " + message);
           });
       }
