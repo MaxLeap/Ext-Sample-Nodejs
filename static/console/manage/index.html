@@ -21,6 +21,8 @@
     </el-dialog>
 
         <el-button type="text" @click="onCreateBtnClick">创建</el-button>
+
+    <!--对话框, 用于创建,修改 -->
     <el-dialog :title="form.title" :visible.sync="dialogFormVisible">
         <el-form :model="form">
             <el-form-item label="ID" :label-width="formLabelWidth">
@@ -39,7 +41,7 @@
         </div>
     </el-dialog>
 
-    <!-- table -->
+    <!-- table, 用于显示列表数据 -->
     <el-table
             v-loading="loading"
             :data="tableData"
@@ -144,7 +146,17 @@
                 this.deleteConfirmDialogVisible = false;
                 this.deleteById(id);
             },
-            refreshList:function () {
+            clearForm:function () {
+                this.form = {
+                    title:"",
+                    mode:"",
+                    book:{}
+                }
+            },
+            reloadPage:function(){
+                window.location.reload();
+            },
+            refreshList:function () {  // 刷新列表数据
                 this.loading = true;
                 let self = this;
                 axios.get('/ext/leapcloud_ext_demo/api/books')
@@ -158,17 +170,7 @@
                         self.$message.error(''+error);
                     });
             },
-            reloadPage:function(){
-                window.location.reload();
-            },
-            clearForm:function () {
-                this.form = {
-                    title:"",
-                    mode:"",
-                    book:{}
-                }
-            },
-            create:function () {
+            create:function () { // 创建 book
                 this.loading = true;
                 let self = this;
                 axios.post('/ext/leapcloud_ext_demo/api/books',self.form.book)
@@ -183,7 +185,7 @@
                         self.$message.error(''+error);
                     });
             },
-            update:function () {
+            update:function () {  // 更新 book
                 this.loading = true;
                 let self = this;
                 const id = self.form.book.id;
@@ -199,7 +201,7 @@
                         self.$message.error(''+error);
                     });
             },
-            deleteById:function (id) {
+            deleteById:function (id) { //删除 book
                 this.loading = true;
                 let self = this;
                 axios.delete('/ext/leapcloud_ext_demo/api/books/'+id)

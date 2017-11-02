@@ -56,13 +56,13 @@
             this.fetchConfig();
         },
         methods:{
-            fetchConfig:function () {
+            fetchConfig:function () { // 获取服务器配置
                 let self = this;
                 self.loading = true;
                 axios.get('/ext/leapcloud_ext_demo/api/serverConfig')
                     .then(function (response) {
                         self.loading = false;
-                        self.form = response.data;
+                        self.form = response.data;  //设置数据
                     })
                     .catch(function (error) {
                         self.loading = false;
@@ -72,10 +72,10 @@
             onSubmit() {
                 let self = this;
                 self.submitLoading = true;
-                axios.put('/ext/leapcloud_ext_demo/api/serverConfig',this.form)
+                axios.put('/ext/leapcloud_ext_demo/api/serverConfig',this.form)  // 调用 API 修改配置信息
                     .then(function (response) {
                         self.submitLoading = false;
-                        self.form = response.data;
+                        self.form = response.data;  //设置数据
                     })
                     .catch(function (error) {
                         self.submitLoading = false;
