@@ -7,14 +7,17 @@ let serverConfig = {
     info: 'test'
 };
 
+// 获取
 function get() {
     return serverConfig
 }
 
+// 更新
 function update(params) {
-    serverConfig = _.merge(serverConfig,params);
+    serverConfig = _.merge(serverConfig,params); // 支持部分更新
     return serverConfig
 }
+
 module.exports = {
     get,
     update

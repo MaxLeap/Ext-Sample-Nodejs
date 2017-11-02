@@ -33,21 +33,25 @@ const books = [
     }
 ];
 
+// 创建
 function create(book) {
     books.push(book);
     return book;
 }
 
+// 列表
 function list() {
     return books;
 }
 
+// 根据 id 获取 book
 function getBookById(id) {
     return _.find(books, function (book) {
         return book.id == id;
     });
 }
 
+// 更新 book
 function update(book,id) {
     const index = _.findIndex(books, function (book) {
         return book.id == id;
@@ -61,6 +65,7 @@ function update(book,id) {
     }
 }
 
+// 删除 book
 function deleteById(id) {
     return _.remove(books, function (book) {
         return book.id == id
