@@ -11,7 +11,7 @@
     </group>
 
     <group title="User">
-        <cell title="登录" :link="{path:'/login',query:$router.query}" is-link></cell>
+        <cell title="登录" value="演示不同平台下的链接跳转" :link="loginLink" is-link></cell>
     </group>
 
     <tabbar v-if="!$parent.isNative">
@@ -34,12 +34,23 @@
     components: {
       Loading, Msg, Tabbar, TabbarItem, Group, Cell
     },
+    computed: {
+      loginLink:function () { // 根据平台决定跳转地址
+        if (this.$parent.isNative) {
+          // 客户端
+          return  "https://www.maxwon.cn/member";
+        } else {
+          // h5
+          return `${this.$parent.h5UrlPrefix}/login?return_uri=${window.location.href}`;
+        }
+      }
+    },
     data() {
       return {
         loading: false,
         showError: false,
         errorMessage: "",
-        books: []
+        books: []  // book 列表
       }
     },
     async created() {
@@ -47,7 +58,7 @@
     },
     methods: {
       /**
-       * 获取用户信息
+       * 获取Book信息
        */
       async fetchBooks() {
         let self = this;
@@ -59,7 +70,7 @@
         })
         .catch(function (error) {
           self.loading = false;
-          const message = error.response.status + " " + JSON.stringify(error.response.data);
+          const message = this.$parent.getErrorMsg(error);
           self.$parent.showErrorMsg("fetchBooks error: " + message);
         });
       },

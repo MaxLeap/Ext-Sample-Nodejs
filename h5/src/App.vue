@@ -56,17 +56,17 @@
       }
     },
     computed: {
-      h5UrlPrefix:function () {
+      h5UrlPrefix:function () {  // h5 的 url 前缀
         return this.appConfig.h5UrlInfo.prefix;
       },
-      isSessionTokenValid: function () {
+      isSessionTokenValid: function () { // sessionToken 是否合法
         const result = this.auth.sessionToken && (this.auth.sessionToken != "");
         return !!result;
       },
-      isNative: function () {
-        return this.auth.platform == "ios" || this.auth.platform == "android";  // 是否在客户端中
+      isNative: function () {  // 是否在客户端中
+        return this.auth.platform == "ios" || this.auth.platform == "android";
       },
-      leapCloudReqHeaders: function () {
+      leapCloudReqHeaders: function () {  //leapcloud 请求的 headers
         let headers = {
           "Content-Type": "application/json",
           "X-ML-AppId": this.auth.appId,
@@ -125,15 +125,6 @@
         }
       },
       /**
-       * 显示错误消息
-       * @param msg
-       */
-      showErrorMsg(msg) {
-        let self = this;
-        self.showError = true;
-        self.errorMessage = msg;
-      },
-      /**
        * 获取服务器配置
        * @param cb 回调
        */
@@ -147,7 +138,7 @@
           })
           .catch(function (error) {
             self.loading = false;
-            const message = error.response?(error.response.status + " " + JSON.stringify(error.response.data)):error.message;
+            const message = this.getErrorMsg(error);
             self.showErrorMsg("fetchServerConfig error: " + message);
           });
       },
@@ -171,9 +162,24 @@
           })
           .catch(function (error) {
             self.loading = false;
-            const message = error.response?(error.response.status + " " + JSON.stringify(error.response.data)):error.message;
             self.showErrorMsg("fetchAppConfig error: " + message);
           });
+      },
+      /**
+       * 显示错误消息
+       * @param msg
+       */
+      showErrorMsg(msg) {
+        let self = this;
+        self.showError = true;
+        self.errorMessage = msg;
+      },
+      getErrorMsg(error){
+        let message = error.message;
+        if(error.response){
+          message = error.response.status + " " + JSON.stringify(error.response.data);
+        }
+        return message;
       }
     }
   }
