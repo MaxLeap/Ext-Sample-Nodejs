@@ -10,8 +10,8 @@
       </div>
     </group>
 
-    <group title="User">
-        <cell title="登录" value="演示不同平台下的链接跳转" :link="loginLink" is-link></cell>
+    <group title="自定义协议">
+        <cell title="登录页面" value="演示不同平台下的链接跳转" :link="loginLink" is-link></cell>
     </group>
 
     <tabbar v-if="!$parent.isNative">
