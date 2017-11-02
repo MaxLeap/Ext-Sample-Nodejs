@@ -22,7 +22,7 @@
             <el-input type="textarea" v-model="form.info"></el-input>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="onSubmit">立即保存</el-button>
+            <el-button type="primary" @click="onSubmit" :loading="submitLoading">立即保存</el-button>
         </el-form-item>
     </el-form>
 
@@ -44,6 +44,7 @@
         data: function() {
             return {
                 loading:true,
+                submitLoading:false,
                 form: {
                     switchDemo: false,
                     mode: 'B2C',
@@ -70,14 +71,14 @@
             },
             onSubmit() {
                 let self = this;
-                self.loading = true;
+                self.submitLoading = true;
                 axios.put('/ext/leapcloud_ext_demo/api/serverConfig',this.form)
                     .then(function (response) {
-                        self.loading = false;
+                        self.submitLoading = false;
                         self.form = response.data;
                     })
                     .catch(function (error) {
-                        self.loading = false;
+                        self.submitLoading = false;
                         self.$message.error(''+error);
                     });
             }
