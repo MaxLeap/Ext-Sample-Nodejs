@@ -158,7 +158,7 @@
       async fetchAppConfig() {
         let self = this;
         // 没有 appId
-        if(self.auth.appId){
+        if(!self.auth.appId){
           return false
         }
         self.loading = true;
