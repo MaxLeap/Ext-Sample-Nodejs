@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# 设置 version, 默认为 latest
+# 设置 Tag, 默认为 latest
 if [ $1 ]
 then
-    VERSION=$1
+    Tag=$1
 else
-    VERSION="latest"
+    Tag="latest"
 fi
 
-docker build -t 10.10.10.160:8010/uxteam/ext-sample-nodejs:${VERSION} ..
+docker build -t 10.10.10.160:8010/uxteam/ext-sample-nodejs:${Tag} ..

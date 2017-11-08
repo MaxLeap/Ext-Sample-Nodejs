@@ -1,0 +1,7 @@
+*
+!server/
+!static
+!package.json
+!package-lock.json
+!Dockerfile
+.git/
