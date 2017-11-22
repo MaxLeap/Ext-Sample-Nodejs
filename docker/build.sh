@@ -8,4 +8,4 @@ else
     Tag="latest"
 fi
 
-docker build -t dockerhub.leapcloud.cn:5080/uxteam/ext-sample-nodejs:${Tag} ..
+docker build -t dockerhub.leapcloud.cn:5080/ext-sample/ext-sample-nodejs:${Tag} ..
