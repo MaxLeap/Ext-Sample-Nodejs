@@ -15,7 +15,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start":"node server/index.js"
+    "start": "node server/index.js"
   },
   "author": "ciyinhuang <ciyinhuang@gmail.com>",
   "license": "MIT"

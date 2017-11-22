@@ -6,8 +6,8 @@ WORKDIR /opt/app
 # Install app dependencies
 COPY package.json package-lock.json ./
 
-# RUN npm install --registry=http://10.10.10.180:4873/
-RUN npm install
+RUN npm install --registry=http://10.10.10.180:4873/
+#RUN npm install
 
 COPY server/ ./server
 COPY static/ ./static
