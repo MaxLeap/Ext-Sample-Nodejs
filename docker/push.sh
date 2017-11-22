@@ -8,4 +8,4 @@ else
     VERSION="latest"
 fi
 
-docker push 10.10.10.160:8010/uxteam/ext-sample-nodejs:${VERSION}
+docker push dockerhub.leapcloud.cn:5080/ext-sample/ext-sample-nodejs:${VERSION}
