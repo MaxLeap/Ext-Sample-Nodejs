@@ -56,15 +56,17 @@
       }
     },
     computed: {
-      h5UrlPrefix:function () {  // h5 的 url 前缀
-        return this.appConfig.h5UrlInfo.prefix;
-      },
       isSessionTokenValid: function () { // sessionToken 是否合法
         const result = this.auth.sessionToken && (this.auth.sessionToken != "");
         return !!result;
       },
       isNative: function () {  // 是否在客户端中
-        return this.auth.platform == "ios" || this.auth.platform == "android";
+        let platform = this.auth.platform;
+        if(!platform || platform==""){
+          return false
+        }
+        platform = platform.toLowerCase();
+        return  platform == "ios" || platform == "android";
       },
       leapCloudReqHeaders: function () {  //leapcloud 请求的 headers
         let headers = {

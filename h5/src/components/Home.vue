@@ -15,7 +15,7 @@
     </group>
 
     <tabbar v-if="!$parent.isNative">
-      <tabbar-item selected v-for="item in $parent.appConfig.menu.h5Tab" :link="$parent.h5UrlPrefix+item.h5Url">
+      <tabbar-item selected v-for="item in $parent.appConfig.menu.h5Tab" :link="item.h5Url">
         <img slot="icon" :src="item.iconUrl">
         <span slot="label">{{item.title}}</span>
       </tabbar-item>
@@ -41,7 +41,7 @@
           return  "https://www.maxwon.cn/member";
         } else {
           // h5
-          return `${this.$parent.h5UrlPrefix}/login?return_uri=${window.location.href}`;
+          return `/maxh5/login?return_uri=${window.location.href}`;
         }
       }
     },
