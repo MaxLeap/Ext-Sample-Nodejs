@@ -8,7 +8,28 @@
           <cell title="服务器配置 mode:" :value="serverConfig.mode"></cell>
       </group>
     </div>
-    <router-view></router-view>
+    <div>
+      <div>
+        <loading :show="loading" text="loading..."></loading>
+      </div>
+
+      <group title="Books">
+        <div v-for="book in books">
+          <cell :title="book.title" :value="book.price+'元'"></cell>
+        </div>
+      </group>
+
+      <group title="自定义协议">
+        <cell title="登录页面" value="演示不同平台下的链接跳转" :link="loginLink" is-link></cell>
+      </group>
+
+      <tabbar v-if="!isNative">
+        <tabbar-item selected v-for="item in appConfig.menu.h5Tab" :link="item.h5Url">
+          <img slot="icon" :src="item.iconUrl">
+          <span slot="label">{{item.title}}</span>
+        </tabbar-item>
+      </tabbar>
+    </div>
   </div>
 </template>
 
@@ -18,7 +39,7 @@
   } from 'vux';
   import axios from 'axios';
   import _ from 'lodash';
-
+  const queryString = require('query-string');
   import {leapCloudApiPrefix, extApiPrefix , appConfigUrl} from './constants';
 
   export default {
@@ -39,6 +60,7 @@
           platform: ""
         }, // 一些和认证相关的信息
         loading: true,
+        books: [],  // book 列表
         showError: false,
         errorMessage: "",
         serverConfig:{},
@@ -56,6 +78,15 @@
       }
     },
     computed: {
+      loginLink:function () { // 根据平台决定跳转地址
+        if (this.isNative) {
+          // 客户端
+          return  "https://www.maxwon.cn/member";
+        } else {
+          // h5
+          return `/maxh5/login?return_uri=${window.location.href}`;
+        }
+      },
       isSessionTokenValid: function () { // sessionToken 是否合法
         const result = this.auth.sessionToken && (this.auth.sessionToken != "");
         return !!result;
@@ -84,7 +115,7 @@
       await this.parseQueryString();
       this.setStatusText();
       this.setPlatformInfo();
-      await Promise.all([this.fetchServerConfig(),this.fetchAppConfig()]);
+      await Promise.all([this.fetchServerConfig(),this.fetchAppConfig(),this.fetchBooks()]);
     },
     methods: {
       /**
@@ -103,7 +134,9 @@
        * 解析 url 中的参数
        */
       async parseQueryString() {
-        const {maxleap_appid, maxleap_sessiontoken, maxleap_userid, platform} = this.$route.query;
+        const query = queryString.parse(location.search);
+        const {maxleap_appid, maxleap_sessiontoken, maxleap_userid, platform} = query;
+        debugger
         if(!maxleap_appid || maxleap_appid==""){
           const errMsg = "parseQueryString error: url 中 appId 不能为空.";
           this.loading = false;
@@ -140,7 +173,7 @@
           })
           .catch(function (error) {
             self.loading = false;
-            const message = this.getErrorMsg(error);
+            const message = self.getErrorMsg(error);
             self.showErrorMsg("fetchServerConfig error: " + message);
           });
       },
@@ -165,6 +198,23 @@
           .catch(function (error) {
             self.loading = false;
             self.showErrorMsg("fetchAppConfig error: " + message);
+          });
+      },
+      /**
+       * 获取Book信息
+       */
+      async fetchBooks() {
+        let self = this;
+        self.loading = true;
+        const url = `${extApiPrefix}/api/books`;
+        return axios.get(url).then(function (response) {
+          self.loading = false;
+          self.books = response.data;
+        })
+          .catch(function (error) {
+            self.loading = false;
+            const message = self.getErrorMsg(error);
+            self.showErrorMsg("fetchBooks error: " + message);
           });
       },
       /**
